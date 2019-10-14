@@ -1,4 +1,3 @@
-
 void incrementOps();
 
 %{
@@ -7,7 +6,8 @@ void incrementOps();
 %}
 
 DIGIT	[0-9]*\.?[0-9]*
-IDENT	[A-z_][A-z0-9_]*
+IDENT	[A-Za-z_][a-zA-Z0-9_]*
+COMMENT ##.*
 %%
 
 "function"			{printf("FUNCTION\n"); currPos += yyleng;}
@@ -15,7 +15,7 @@ IDENT	[A-z_][A-z0-9_]*
 "endparams"			{printf("END_PARAMS\n"); currPos += yyleng;}
 "beginlocals"		{printf("BEGIN_LOCALS\n"); currPos += yyleng;}
 "endlocals"			{printf("END_LOCALS\n"); currPos += yyleng;}
-"beginbdoy"			{printf("BEGIN_BODY\n"); currPos += yyleng;}
+"beginbody"			{printf("BEGIN_BODY\n"); currPos += yyleng;}
 "endbody"			{printf("END_BODY\n"); currPos += yyleng;}
 "integer"			{printf("INTEGER\n"); currPos += yyleng;}
 "array"				{printf("ARRAY\n"); currPos += yyleng;}
@@ -38,28 +38,30 @@ IDENT	[A-z_][A-z0-9_]*
 "false"				{printf("FALSE\n"); currPos += yyleng;}
 "return"				{printf("RETURN\n"); currPos += yyleng;}
 
-"-"		{printf("SUB");  currPos += yyleng;}
-"+"		{printf("ADD");  currPos += yyleng;}
-"*"		{printf("MULT");  currPos += yyleng;}
-"/"		{printf("DIV");  currPos += yyleng;}
-"%"		{printf("MOD");  currPos += yyleng;}
-"=="		{printf("EQ");  currPos += yyleng;}
-"<>"		{printf("NEW");  currPos += yyleng;}
-"<"		{printf("LT");  currPos += yyleng;}
-">"		{printf("GT");  currPos += yyleng;}
-"<="		{printf("LTE");  currPos += yyleng;}
-">="		{printf("GTE");  currPos += yyleng;}
-";"		{printf("SEMICOLON");  currPos += yyleng;}
-":"		{printf("COLON");  currPos += yyleng;}
-","		{printf("COMMA");  currPos += yyleng;}
-"("		{printf("L_PAREN");  currPos += yyleng;}
-")"		{printf("R_PAREN");  currPos += yyleng;}
-"["		{printf("L_SQUARE_BRACKET");  currPos += yyleng;}
-"]"		{printf("R_SQUARE_BRACKET");  currPos += yyleng;}
-":="		{printf("ASSIGN");  currPos += yyleng;}
+"-"		{printf("SUB\n");  currPos += yyleng;}
+"+"		{printf("ADD\n");  currPos += yyleng;}
+"*"		{printf("MULT\n");  currPos += yyleng;}
+"/"		{printf("DIV\n");  currPos += yyleng;}
+"%"		{printf("MOD\n");  currPos += yyleng;}
+"=="		{printf("EQ\n");  currPos += yyleng;}
+"<>"		{printf("NEW\n");  currPos += yyleng;}
+"<"		{printf("LT\n");  currPos += yyleng;}
+">"		{printf("GT\n");  currPos += yyleng;}
+"<="		{printf("LTE\n");  currPos += yyleng;}
+">="		{printf("GTE\n");  currPos += yyleng;}
+";"		{printf("SEMICOLON\n");  currPos += yyleng;}
+":"		{printf("COLON\n");  currPos += yyleng;}
+","		{printf("COMMA\n");  currPos += yyleng;}
+"("		{printf("L_PAREN\n");  currPos += yyleng;}
+")"		{printf("R_PAREN\n");  currPos += yyleng;}
+"["		{printf("L_SQUARE_BRACKET\n");  currPos += yyleng;}
+"]"		{printf("R_SQUARE_BRACKET\n");  currPos += yyleng;}
+":="		{printf("ASSIGN\n");  currPos += yyleng;}
 
 
+{IDENT}+			{printf("IDENT %s\n", yytext); currPos += yyleng;}
 {DIGIT}+       {printf("NUMBER %s\n", yytext); currPos += yyleng;}
+{COMMENT}+		{currPos += yyleng;}
 
 [ \t]+         {/* ignore spaces */ currPos += yyleng;}
 
