@@ -7,7 +7,9 @@ void incrementOps();
 
 DIGIT	[0-9]*\.?[0-9]*
 IDENT	[A-Za-z_][a-zA-Z0-9_]*
+ERRORIDENT [0-9][0-9a-zA-Z]*
 COMMENT ##.*
+
 %%
 
 "function"			{printf("FUNCTION\n"); currPos += yyleng;}
@@ -67,6 +69,7 @@ COMMENT ##.*
 
 "\n"           {currLine++; currPos = 1;}
 
+{ERRORIDENT}+  {printf("Error at line %d, column %d: unrecognized identifier \"%s\"\n", currLine, currPos, yytext); exit(0);}
 .              {printf("Error at line %d, column %d: unrecognized symbol \"%s\"\n", currLine, currPos, yytext); exit(0);}
 
 %%
