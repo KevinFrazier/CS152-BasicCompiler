@@ -9,7 +9,7 @@ void incrementOps();
 DIGIT	[0-9]*\.?[0-9]*
 IDENT	[A-Za-z_][a-zA-Z0-9_]*[a-zA-Z0-9]|[A-Za-z]
 ERRORIDENT [0-9][0-9a-zA-Z]*_?
-UNDERSCOREIDENT [A-Za-z_][.a-zA-Z0-9]*_
+UNDERSCOREIDENT [A-Za-z_][a-zA-Z0-9_]*_
 COMMENT ##.*
 
 %%
