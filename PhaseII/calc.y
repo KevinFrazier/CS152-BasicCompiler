@@ -54,8 +54,8 @@ exp:		NUMBER                { $$ = $1;}
 			| L_PAREN exp R_PAREN { $$ = $2;}
 			;
 
-term: MINUS var  {printf("term -> -var")}
-         | MINUS exp {printf("term -> -exp")}
+term: MINUS var  {printf("term -> -var\n");}
+         | MINUS exp {printf("term -> -exp\n");}
       ;
 var: IDENT { printf("var -> ident\n");}
          | IDENT L_SQUARE_BRACKET exp R_SQUARE_BRACKET {printf("var -> ident [ exp ] \n ");}
