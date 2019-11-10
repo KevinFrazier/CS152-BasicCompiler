@@ -56,9 +56,24 @@ extern int yydebug;
     R_SQUARE_BRACKET = 266,
     NOT = 267,
     END = 268,
-    NUMBER = 269,
-    IDENT = 270,
-    UMINUS = 271
+    EQ = 269,
+    NEQ = 270,
+    LT = 271,
+    GT = 272,
+    LTE = 273,
+    GTE = 274,
+    SEMICOLON = 275,
+    COLON = 276,
+    COMMA = 277,
+    ASSIGN = 278,
+    TRUE = 279,
+    FALSE = 280,
+    RETURN = 281,
+    MOD = 282,
+    AND = 283,
+    NUMBER = 284,
+    IDENT = 285,
+    UMINUS = 286
   };
 #endif
 
@@ -73,7 +88,7 @@ union YYSTYPE
   int ival;
   char* sval;
 
-#line 77 "y.tab.h" /* yacc.c:1909  */
+#line 92 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

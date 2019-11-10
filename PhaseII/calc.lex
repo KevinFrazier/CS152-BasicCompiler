@@ -40,7 +40,7 @@ COMMENT ##.*
 "continue"			{printf("CONTINUE\n"); currPos += yyleng;}
 "read"				{printf("READ\n"); currPos += yyleng;}
 "write"				{printf("WRITE\n"); currPos += yyleng;}
-"and"					{printf("AND\n"); currPos += yyleng;}
+"and"					{printf("AND\n"); currPos += yyleng; return AND;}
 "or"					{printf("OR\n"); currPos += yyleng;}
 "not"					{printf("NOT\n"); currPos += yyleng; return NOT;}
 "true"				{printf("TRUE\n"); currPos += yyleng; return TRUE;}

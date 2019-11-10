@@ -24,7 +24,7 @@
 
 %error-verbose
 %start input
-%token MULT DIV PLUS MINUS EQUAL L_PAREN R_PAREN L_SQUARE_BRACKET R_SQUARE_BRACKET NOT END EQ NEQ LT GT LTE GTE SEMICOLON COLON COMMA ASSIGN TRUE FALSE RETURN MOD
+%token MULT DIV PLUS MINUS EQUAL L_PAREN R_PAREN L_SQUARE_BRACKET R_SQUARE_BRACKET NOT END EQ NEQ LT GT LTE GTE SEMICOLON COLON COMMA ASSIGN TRUE FALSE RETURN MOD AND
 %token <dval> NUMBER
 %type <dval> exp
 
@@ -35,7 +35,6 @@
 %left MULT DIV
 %nonassoc UMINUS
 
-
 %% 
 input:	| input line            
 			;
@@ -44,8 +43,23 @@ line:		exp EQUAL END         { printf("\t%f\n", $1);}
     		| var END
          | term END
 			| comp END
+         | bool-expr END
          ;
 
+bool-expr: relation-and-expr {printf("bool-expr -> relation-and-expr \n");}
+         | relation-and-expr AND relation-and-expr {printf("bool-expr -> relation-expr and relation-expr");}
+         ;
+relation-and-expr: relation-expr {printf("relation-and-expr -> relation-expr \n");}
+         |relation-expr AND relation-expr {printf("relation-and-expr -> relation-expr and relation-expr");}
+         ;
+
+relation-expr: NOT relation-expr {printf("relation-expr -> not relation-expr \n");}
+         | exp comp exp  {printf("relation-expr -> exp comp exp \n");}
+         | L_PAREN bool-expr R_PAREN {printf("relation=expr -> (bool-expr) \n");}
+         | TRUE
+         | FALSE
+         ;
+         
 exp:		NUMBER                { $$ = $1;}
    		| exp PLUS exp        { $$ = $1 + $3;}
 			| exp MINUS exp       { $$ = $1 - $3;}
@@ -55,8 +69,9 @@ exp:		NUMBER                { $$ = $1;}
 			| L_PAREN exp R_PAREN { $$ = $2;}
 			;
 
-term: MINUS var  {printf("term -> -var\n");}
-         | MINUS exp {printf("term -> -exp\n");}
+
+term: UMINUS var  {printf("term -> -var\n");}
+         | UMINUS exp {printf("term -> -exp\n");}
          ;
 
 var: IDENT { printf("var -> ident\n");}
