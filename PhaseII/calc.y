@@ -48,6 +48,9 @@ line:		exp EQUAL END         { printf("\t%f\n", $1);}
 			| multexp END
 			| bool_expr END
 			| declaration END
+         | statement END
+         | function END
+         | program END
          ;
 
 statement: var ASSIGN exp {printf("statement -> var ASSIGN exp");}
