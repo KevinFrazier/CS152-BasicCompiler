@@ -24,18 +24,17 @@
 
 %error-verbose
 %start input
-%token MULT DIV PLUS MINUS EQUAL L_PAREN R_PAREN L_SQUARE_BRACKET R_SQUARE_BRACKET NOT END EQ NEQ LT GT LTE GTE SEMICOLON COLON COMMA ASSIGN TRUE FALSE RETURN MOD AND CONTINUE READ WRITE
+%token MULT DIV PLUS MINUS EQUAL L_PAREN R_PAREN L_SQUARE_BRACKET R_SQUARE_BRACKET NOT END EQ NEQ LT GT LTE GTE SEMICOLON COLON COMMA ASSIGN TRUE FALSE RETURN MOD AND CONTINUE READ WRITE INTEGER OF ARRAY
 %token <dval> NUMBER
-%type <dval> exp
+%type <dval> exp multexp
 
 %token <sval> IDENT
-%type <sval> var term
-%type <sval> comp
+%type <sval> var term comp
 %left PLUS MINUS
 %left MULT DIV
 %nonassoc UMINUS
 
-%token DO BEGINLOOP ENDLOOP WHILE IF THEN ENDIF
+%token DO BEGINLOOP ENDLOOP WHILE IF THEN ENDIF ELSE
 
 %% 
 input:	| input line            
@@ -45,51 +44,67 @@ line:		exp EQUAL END         { printf("\t%f\n", $1);}
     		| var END
          | term END
 			| comp END
-         | bool-expr END
+			| exp END
+			| multexp END
+			| bool_expr END
+			| declaration END
          ;
 
 statement: var ASSIGN exp {printf("statement -> var ASSIGN exp");}
-         | IF bool_expr THEN statements ELSE statements ENDIF
-         | IF bool_expr THEN statements ENDIF
-         | WHILE bool_expr BEGINLOOP statements ENDLOOP
-         | DO BEGINLOOP statements ENDLOOP WHILE bool_expr 
-         | READ manyVars {printf("statement -> READ manyVars");}
-         | WRITE manyVars {printf("statement -> WRITE manyVars");}
+         | IF bool_expr THEN many_statements ELSE many_statements ENDIF
+         | IF bool_expr THEN many_statements ENDIF
+         | WHILE bool_expr BEGINLOOP many_statements ENDLOOP
+         | DO BEGINLOOP many_statements ENDLOOP WHILE bool_expr 
+         | READ many_vars {printf("statement -> READ manyVars");}
+         | WRITE many_vars {printf("statement -> WRITE manyVars");}
          | CONTINUE
          | RETURN exp
          ;
 
-statements : statement
-         | statement SEMICOLON statements
+many_statements : statement
+         | statement SEMICOLON many_statements
 many_vars: var
          | var COMMA many_vars
          ;
-bool-expr: relation-and-expr {printf("bool-expr -> relation-and-expr \n");}
-         | relation-and-expr AND relation-and-expr {printf("bool-expr -> relation-expr and relation-expr");}
-         ;
-relation-and-expr: relation-expr {printf("relation-and-expr -> relation-expr \n");}
-         |relation-expr AND relation-expr {printf("relation-and-expr -> relation-expr and relation-expr");}
+
+term: opt_umin var  {printf("term -> -var\n");}
+			| opt_umin NUMBER
+			| opt_umin L_PAREN exp R_PAREN {printf("term -> -exp\n");}
+			| IDENT L_PAREN many_exp R_PAREN
          ;
 
-relation-expr: NOT relation-expr {printf("relation-expr -> not relation-expr \n");}
-         | exp comp exp  {printf("relation-expr -> exp comp exp \n");}
-         | L_PAREN bool-expr R_PAREN {printf("relation=expr -> (bool-expr) \n");}
-         | TRUE
-         | FALSE
-         ;
-         
-exp:		NUMBER                { $$ = $1;}
-   		| exp PLUS exp        { $$ = $1 + $3;}
-			| exp MINUS exp       { $$ = $1 - $3;}
-			| exp MULT exp        { $$ = $1 * $3;}
-			| exp DIV exp         { if ($3 == 0) yyerror("divide by zero"); else $$ = $1 / $3;}
-			| MINUS exp %prec UMINUS { $$ = -$2;}
-			| L_PAREN exp R_PAREN { $$ = $2;}
+opt_umin: | UMINUS
 			;
 
+many_exp: exp
+			| exp COMMA many_exp
+			;
 
-term: UMINUS var  {printf("term -> -var\n");}
-         | UMINUS exp {printf("term -> -exp\n");}
+many_ident: IDENT
+			 | IDENT COMMA many_ident
+			 ;
+
+many_declaration: declaration
+					 | declaration SEMICOLON many_declaration
+					 ;
+
+declaration: many_ident COLON INTEGER
+			  | many_ident COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER
+			  ;
+
+bool_expr: relation_and_expr {printf("bool-expr -> relation-and-expr \n");}
+         | relation_and_expr AND relation_and_expr {printf("bool-expr -> relation-expr and relation-expr");}
+         ;
+
+relation_and_expr: relation_expr {printf("relation-and-expr -> relation-expr \n");}
+         |relation_expr AND relation_expr {printf("relation-and-expr -> relation-expr and relation-expr");}
+         ;
+
+relation_expr: NOT relation_expr {printf("relation-expr -> not relation-expr \n");}
+         | exp comp exp  {printf("relation-expr -> exp comp exp \n");}
+         | L_PAREN bool_expr R_PAREN {printf("relation=expr -> (bool-expr) \n");}
+         | TRUE
+         | FALSE
          ;
 
 var: IDENT { printf("var -> ident\n");}
@@ -103,6 +118,18 @@ comp: EQ
 		| LTE
 		| GTE
 		;
+
+exp: multexp						
+		| multexp PLUS exp		
+		| multexp MINUS exp		
+		;
+
+multexp: term						
+			| term MULT multexp	
+			| term DIV multexp	
+			| term MOD multexp	
+			;
+
 %%
 
 int main(int argc, char **argv) {
