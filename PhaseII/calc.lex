@@ -43,29 +43,29 @@ COMMENT ##.*
 "and"					{printf("AND\n"); currPos += yyleng;}
 "or"					{printf("OR\n"); currPos += yyleng;}
 "not"					{printf("NOT\n"); currPos += yyleng; return NOT;}
-"true"				{printf("TRUE\n"); currPos += yyleng;}
-"false"				{printf("FALSE\n"); currPos += yyleng;}
-"return"				{printf("RETURN\n"); currPos += yyleng;}
+"true"				{printf("TRUE\n"); currPos += yyleng; return TRUE;}
+"false"				{printf("FALSE\n"); currPos += yyleng; return FALSE;}
+"return"				{printf("RETURN\n"); currPos += yyleng; return RETURN;}
 
 "-"		{printf("SUB\n");  currPos += yyleng; return MINUS;}
 "+"		{printf("ADD\n");  currPos += yyleng; return PLUS;}
 "*"		{printf("MULT\n");  currPos += yyleng; return MULT;}
 "/"		{printf("DIV\n");  currPos += yyleng; return DIV;}
-"%"		{printf("MOD\n");  currPos += yyleng;}
-"=="		{printf("EQ\n");  currPos += yyleng;}
-"<>"		{printf("NE\n");  currPos += yyleng;}
-"<"		{printf("LT\n");  currPos += yyleng;}
-">"		{printf("GT\n");  currPos += yyleng;}
-"<="		{printf("LTE\n");  currPos += yyleng;}
-">="		{printf("GTE\n");  currPos += yyleng;}
-";"		{printf("SEMICOLON\n");  currPos += yyleng;}
-":"		{printf("COLON\n");  currPos += yyleng;}
-","		{printf("COMMA\n");  currPos += yyleng;}
+"%"		{printf("MOD\n");  currPos += yyleng; return MOD;}
+"=="		{printf("EQ\n");  currPos += yyleng; return EQ;}
+"<>"		{printf("NEQ\n");  currPos += yyleng; return NEQ;}
+"<"		{printf("LT\n");  currPos += yyleng; return LT;}
+">"		{printf("GT\n");  currPos += yyleng; return GT;}
+"<="		{printf("LTE\n");  currPos += yyleng; return LTE;}
+">="		{printf("GTE\n");  currPos += yyleng; return GTE;}
+";"		{printf("SEMICOLON\n");  currPos += yyleng; return SEMICOLON;}
+":"		{printf("COLON\n");  currPos += yyleng; return COLON;}
+","		{printf("COMMA\n");  currPos += yyleng; return COMMA;}
 "("		{printf("L_PAREN\n");  currPos += yyleng; return L_PAREN;}
 ")"		{printf("R_PAREN\n");  currPos += yyleng; return R_PAREN;}
 "["		{printf("L_SQUARE_BRACKET\n");  currPos += yyleng; return L_SQUARE_BRACKET;}
 "]"		{printf("R_SQUARE_BRACKET\n");  currPos += yyleng; return R_SQUARE_BRACKET;}
-":="		{printf("ASSIGN\n");  currPos += yyleng;}
+":="		{printf("ASSIGN\n");  currPos += yyleng; return ASSIGN;}
 "="		{printf("EQUAL\n"); currPos += yyleng; return EQUAL;}
 
 {IDENT}+			{printf("IDENT %s\n", yytext); yylval.sval = yytext; currPos += yyleng; return IDENT;}

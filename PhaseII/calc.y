@@ -24,42 +24,52 @@
 
 %error-verbose
 %start input
-%token MULT DIV PLUS MINUS EQUAL L_PAREN R_PAREN L_SQUARE_BRACKET R_SQUARE_BRACKET NOT END
+%token MULT DIV PLUS MINUS EQUAL L_PAREN R_PAREN L_SQUARE_BRACKET R_SQUARE_BRACKET NOT END EQ NEQ LT GT LTE GTE SEMICOLON COLON COMMA ASSIGN TRUE FALSE RETURN MOD
 %token <dval> NUMBER
 %type <dval> exp
 
 %token <sval> IDENT
 %type <sval> var term
+%type <sval> comp
 %left PLUS MINUS
 %left MULT DIV
 %nonassoc UMINUS
 
 
 %% 
-input:	
-     			| input line            
+input:	| input line            
 			;
 
 line:		exp EQUAL END         { printf("\t%f\n", $1);}
     		| var END
          | term END
+			| comp END
          ;
 
 exp:		NUMBER                { $$ = $1;}
    		| exp PLUS exp        { $$ = $1 + $3;}
 			| exp MINUS exp       { $$ = $1 - $3;}
 			| exp MULT exp        { $$ = $1 * $3;}
-			| exp DIV exp         { if ($3==0) yyerror("divide by zero"); else $$ = $1 / $3;}
+			| exp DIV exp         { if ($3 == 0) yyerror("divide by zero"); else $$ = $1 / $3;}
 			| MINUS exp %prec UMINUS { $$ = -$2;}
 			| L_PAREN exp R_PAREN { $$ = $2;}
 			;
 
 term: MINUS var  {printf("term -> -var\n");}
          | MINUS exp {printf("term -> -exp\n");}
-      ;
+         ;
+
 var: IDENT { printf("var -> ident\n");}
          | IDENT L_SQUARE_BRACKET exp R_SQUARE_BRACKET {printf("var -> ident [ exp ] \n ");}
-      ;
+	      ;
+
+comp: EQ
+		| NEQ
+		| LT
+		| GT
+		| LTE
+		| GTE
+		;
 %%
 
 int main(int argc, char **argv) {
