@@ -26,9 +26,9 @@ COMMENT ##.*
 "endlocals"			{printf("END_LOCALS\n"); currPos += yyleng;}
 "beginbody"			{printf("BEGIN_BODY\n"); currPos += yyleng;}
 "endbody"			{printf("END_BODY\n"); currPos += yyleng;}
-"integer"			{printf("INTEGER\n"); currPos += yyleng;}
-"array"				{printf("ARRAY\n"); currPos += yyleng;}
-"of"					{printf("OF\n"); currPos += yyleng;}
+"integer"			{printf("INTEGER\n"); currPos += yyleng; return INTEGER;}
+"array"				{printf("ARRAY\n"); currPos += yyleng; return ARRAY;}
+"of"					{printf("OF\n"); currPos += yyleng; return OF;}
 "if"					{printf("IF\n"); currPos += yyleng;}
 "then"				{printf("THEN\n"); currPos += yyleng;}
 "endif"				{printf("ENDIF\n"); currPos += yyleng;}

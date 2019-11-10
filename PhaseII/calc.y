@@ -24,7 +24,7 @@
 
 %error-verbose
 %start input
-%token MULT DIV PLUS MINUS EQUAL L_PAREN R_PAREN L_SQUARE_BRACKET R_SQUARE_BRACKET NOT END EQ NEQ LT GT LTE GTE SEMICOLON COLON COMMA ASSIGN TRUE FALSE RETURN MOD AND INTEGER
+%token MULT DIV PLUS MINUS EQUAL L_PAREN R_PAREN L_SQUARE_BRACKET R_SQUARE_BRACKET NOT END EQ NEQ LT GT LTE GTE SEMICOLON COLON COMMA ASSIGN TRUE FALSE RETURN MOD AND INTEGER OF ARRAY
 %token <dval> NUMBER
 %type <dval> exp multexp
 
@@ -45,6 +45,7 @@ line:		exp EQUAL END         { printf("\t%f\n", $1);}
 			| exp END
 			| multexp END
 			| bool_expr END
+			| declaration END
          ;
 
 term: opt_umin var  {printf("term -> -var\n");}
@@ -64,8 +65,13 @@ many_ident: IDENT
 			 | IDENT COMMA many_ident
 			 ;
 
+many_declaration: declaration
+					 | declaration SEMICOLON many_declaration
+					 ;
+
 declaration: many_ident COLON INTEGER
-			  | many_ident COLON 
+			  | many_ident COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER
+			  ;
 
 bool_expr: relation_and_expr {printf("bool-expr -> relation-and-expr \n");}
          | relation_and_expr AND relation_and_expr {printf("bool-expr -> relation-expr and relation-expr");}
