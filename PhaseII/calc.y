@@ -24,7 +24,7 @@
 
 %error-verbose
 %start input
-%token MULT DIV PLUS MINUS EQUAL L_PAREN R_PAREN L_SQUARE_BRACKET R_SQUARE_BRACKET NOT END EQ NEQ LT GT LTE GTE SEMICOLON COLON COMMA ASSIGN TRUE FALSE RETURN MOD AND
+%token MULT DIV PLUS MINUS EQUAL L_PAREN R_PAREN L_SQUARE_BRACKET R_SQUARE_BRACKET NOT END EQ NEQ LT GT LTE GTE SEMICOLON COLON COMMA ASSIGN TRUE FALSE RETURN MOD AND CONTINUE READ WRITE
 %token <dval> NUMBER
 %type <dval> exp
 
@@ -34,6 +34,8 @@
 %left PLUS MINUS
 %left MULT DIV
 %nonassoc UMINUS
+
+%token DO BEGINLOOP ENDLOOP WHILE IF THEN ENDIF
 
 %% 
 input:	| input line            
@@ -46,6 +48,22 @@ line:		exp EQUAL END         { printf("\t%f\n", $1);}
          | bool-expr END
          ;
 
+statement: var ASSIGN exp {printf("statement -> var ASSIGN exp");}
+         | IF bool_expr THEN statements ELSE statements ENDIF
+         | IF bool_expr THEN statements ENDIF
+         | WHILE bool_expr BEGINLOOP statements ENDLOOP
+         | DO BEGINLOOP statements ENDLOOP WHILE bool_expr 
+         | READ manyVars {printf("statement -> READ manyVars");}
+         | WRITE manyVars {printf("statement -> WRITE manyVars");}
+         | CONTINUE
+         | RETURN exp
+         ;
+
+statements : statement
+         | statement SEMICOLON statements
+many_vars: var
+         | var COMMA many_vars
+         ;
 bool-expr: relation-and-expr {printf("bool-expr -> relation-and-expr \n");}
          | relation-and-expr AND relation-and-expr {printf("bool-expr -> relation-expr and relation-expr");}
          ;
