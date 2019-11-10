@@ -40,7 +40,7 @@ COMMENT ##.*
 "continue"			{printf("CONTINUE\n"); currPos += yyleng;}
 "read"				{printf("READ\n"); currPos += yyleng;}
 "write"				{printf("WRITE\n"); currPos += yyleng;}
-"and"					{printf("AND\n"); currPos += yyleng;}
+"and"					{printf("AND\n"); currPos += yyleng; return AND}
 "or"					{printf("OR\n"); currPos += yyleng;}
 "not"					{printf("NOT\n"); currPos += yyleng; return NOT;}
 "true"				{printf("TRUE\n"); currPos += yyleng;}
@@ -68,6 +68,8 @@ COMMENT ##.*
 ":="		{printf("ASSIGN\n");  currPos += yyleng;}
 "="		{printf("EQUAL\n"); currPos += yyleng; return EQUAL;}
 
+"true" {printf("TRUE\n); currPos += yyleng; return TRUE}
+"false" {printf("FALSE\n); currPos += yyleng; return FALSE}
 {IDENT}+			{printf("IDENT %s\n", yytext); yylval.sval = yytext; currPos += yyleng; return IDENT;}
 {DIGIT}+       {printf("NUMBER %s\n", yytext); yylval.dval = atoi(yytext); currPos += yyleng; return NUMBER;}
 {COMMENT}+		{currPos += yyleng;}

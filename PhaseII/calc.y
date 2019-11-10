@@ -34,6 +34,7 @@
 %left MULT DIV
 %nonassoc UMINUS
 
+%token TRUE FALSE
 
 %% 
 input:	
@@ -43,8 +44,18 @@ input:
 line:		exp EQUAL END         { printf("\t%f\n", $1);}
     		| var END
          | term END
+         | relation-expr END
          ;
 
+bool-expr: relation-and-expr AND relation-and-expr {printf("bool-expr -> relation-expr and relation-expr");}
+
+relation-and-expr: relation-expr AND relation-expr {printf("relation-and-expr -> relation-expr and relation-expr");}
+
+relation-expr: NOT relation-expr {printf("relation-expr -> not relation-expr");}
+         | exp comp exp  {printf("relation-expr -> exp comp exp");}
+         | L_PAREN bool-expr R_PAREN {print("relation=expr -> (bool-expr)")}
+         | TRUE
+         | FALSE
 exp:		NUMBER                { $$ = $1;}
    		| exp PLUS exp        { $$ = $1 + $3;}
 			| exp MINUS exp       { $$ = $1 - $3;}
@@ -53,6 +64,7 @@ exp:		NUMBER                { $$ = $1;}
 			| MINUS exp %prec UMINUS { $$ = -$2;}
 			| L_PAREN exp R_PAREN { $$ = $2;}
 			;
+
 
 term: MINUS var  {printf("term -> -var\n");}
          | MINUS exp {printf("term -> -exp\n");}
