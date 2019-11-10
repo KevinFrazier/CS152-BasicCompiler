@@ -26,11 +26,10 @@
 %start input
 %token MULT DIV PLUS MINUS EQUAL L_PAREN R_PAREN L_SQUARE_BRACKET R_SQUARE_BRACKET NOT END EQ NEQ LT GT LTE GTE SEMICOLON COLON COMMA ASSIGN TRUE FALSE RETURN MOD
 %token <dval> NUMBER
-%type <dval> exp
+%type <dval> exp multexp
 
 %token <sval> IDENT
-%type <sval> var term
-%type <sval> comp
+%type <sval> var term comp
 %left PLUS MINUS
 %left MULT DIV
 %nonassoc UMINUS
@@ -44,19 +43,13 @@ line:		exp EQUAL END         { printf("\t%f\n", $1);}
     		| var END
          | term END
 			| comp END
+			| exp END
+			| multexp END
          ;
 
-exp:		NUMBER                { $$ = $1;}
-   		| exp PLUS exp        { $$ = $1 + $3;}
-			| exp MINUS exp       { $$ = $1 - $3;}
-			| exp MULT exp        { $$ = $1 * $3;}
-			| exp DIV exp         { if ($3 == 0) yyerror("divide by zero"); else $$ = $1 / $3;}
-			| MINUS exp %prec UMINUS { $$ = -$2;}
-			| L_PAREN exp R_PAREN { $$ = $2;}
-			;
-
-term: MINUS var  {printf("term -> -var\n");}
-         | MINUS exp {printf("term -> -exp\n");}
+term: UMINUS var  {printf("term -> -var\n");}
+         | UMINUS exp {printf("term -> -exp\n");}
+			| NUMBER
          ;
 
 var: IDENT { printf("var -> ident\n");}
@@ -70,6 +63,18 @@ comp: EQ
 		| LTE
 		| GTE
 		;
+
+exp: multexp						{$$ = $1;}
+		| multexp PLUS exp		{$$ = $1 + $2;}
+		| multexp MINUS exp		{$$ = $1 - $2;}
+		;
+
+multexp: term						{$$ = $1;}
+			| term MULT multexp	{$$ = $1 * $2;}
+			| term DIV multexp	{$$ = $1 / $2;}
+			| term MOD multexp	{$$ = $1 % $2;}
+			;
+
 %%
 
 int main(int argc, char **argv) {
