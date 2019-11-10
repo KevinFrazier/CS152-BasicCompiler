@@ -48,6 +48,11 @@ line:		exp EQUAL END         { printf("\t%f\n", $1);}
 			| declaration END
          ;
 
+program: 
+			| function
+			| function program
+			;
+
 term: opt_umin var  {printf("term -> -var\n");}
 			| opt_umin NUMBER
 			| opt_umin L_PAREN exp R_PAREN {printf("term -> -exp\n");}
@@ -68,6 +73,8 @@ many_ident: IDENT
 many_declaration: declaration
 					 | declaration SEMICOLON many_declaration
 					 ;
+
+function: FUNCTION IDENT SEMICOLON BEGIN_PARAMS many_declaration END_PARAMS BEGIN_LOCALS many_declaration END_LOCALS BEGIN_BODY many_statement END_BODY
 
 declaration: many_ident COLON INTEGER
 			  | many_ident COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER

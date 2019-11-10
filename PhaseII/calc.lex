@@ -19,13 +19,13 @@ COMMENT ##.*
 
 %%
 
-"function"			{printf("FUNCTION\n"); currPos += yyleng;}
-"beginparams"		{printf("BEGIN_PARAMS\n"); currPos += yyleng;}
-"endparams"			{printf("END_PARAMS\n"); currPos += yyleng;}
-"beginlocals"		{printf("BEGIN_LOCALS\n"); currPos += yyleng;}
-"endlocals"			{printf("END_LOCALS\n"); currPos += yyleng;}
-"beginbody"			{printf("BEGIN_BODY\n"); currPos += yyleng;}
-"endbody"			{printf("END_BODY\n"); currPos += yyleng;}
+"function"			{printf("FUNCTION\n"); currPos += yyleng; return FUNCTION;}
+"beginparams"		{printf("BEGIN_PARAMS\n"); currPos += yyleng; return BEGIN_PARAMS;}
+"endparams"			{printf("END_PARAMS\n"); currPos += yyleng; return END_PARAMS;}
+"beginlocals"		{printf("BEGIN_LOCALS\n"); currPos += yyleng; return BEGIN_LOCALS;}
+"endlocals"			{printf("END_LOCALS\n"); currPos += yyleng; return END_LOCALS;}
+"beginbody"			{printf("BEGIN_BODY\n"); currPos += yyleng; return BEGIN_BODY;}
+"endbody"			{printf("END_BODY\n"); currPos += yyleng; return END_BODY;}
 "integer"			{printf("INTEGER\n"); currPos += yyleng; return INTEGER;}
 "array"				{printf("ARRAY\n"); currPos += yyleng; return ARRAY;}
 "of"					{printf("OF\n"); currPos += yyleng; return OF;}
