@@ -68,9 +68,9 @@ COMMENT ##.*
 ":="		{currPos += yyleng; return ASSIGN;}
 "="		{currPos += yyleng; return EQUAL;}
 
-{IDENT}+			{printf("IDENT %s\n", yytext); yylval.sval = yytext; currPos += yyleng; return IDENT;}
+{IDENT}+			{/*printf("IDENT %s\n", yytext);*/ yylval.sval = yytext; currPos += yyleng; return IDENT;}
 {DIGIT}+       {/*printf("NUMBER %s\n", yytext);*/ yylval.dval = atoi(yytext); currPos += yyleng; return NUMBER;}
-{COMMENT}+		{currPos += yyleng;}
+{COMMENT}+		{currPos += yyleng; return COMMENT;}
 
 [ \t]+         {/* ignore spaces */ currPos += yyleng;}
 
