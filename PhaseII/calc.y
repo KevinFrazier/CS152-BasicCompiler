@@ -52,43 +52,43 @@ statement: var ASSIGN exp many_ends {printf("statement -> var ASSIGN exp\n");}
          | many_ends READ many_vars many_ends {printf("statement -> READ vars\n");}
          | many_ends WRITE many_vars many_ends {printf("statement -> WRITE vars\n");}
          | many_ends CONTINUE many_ends {printf("statement -> CONTINUE\n");}
-         | many_ends RETURN exp many_ends {printf("statement -> RETURN expression\n")}
+         | many_ends RETURN exp many_ends {printf("statement -> RETURN expression\n");}
          ;
 
-many_statements : many_ends {printf("statements -> epsilon\n")}
-         | statement SEMICOLON many_ends many_statements many_ends {printf("statements -> statements\n")}
+many_statements : many_ends {printf("statements -> epsilon\n");}
+         | statement SEMICOLON many_ends many_statements many_ends {printf("statements -> statements\n");}
 
-many_vars: var {printf("vars -> var\n")}
-         | var COMMA many_vars {printf("vars -> var COMMA vars\n")}
+many_vars: var {printf("vars -> var\n");}
+         | var COMMA many_vars {printf("vars -> var COMMA vars\n");}
          ;
-program:				  {printf("prog_start -> epsilon\n")}
-			| function {printf("prog_start -> function\n")}
-			| function program {printf("prog_start -> function program\n")}
+program:				  {printf("prog_start -> epsilon\n");}
+			| function {printf("prog_start -> function\n");}
+			| function program {printf("prog_start -> function program\n");}
 			;
 
 term: var  {printf("term -> var\n");}
-			| UMINUS var {printf("term -> UMINUS var \n")}
-			| NUMBER {printf("term -> NUMBER\n")}
-			| UMINUS NUMBER {printf("term -> UMINUS NUMBER\n")}
+			| UMINUS var {printf("term -> UMINUS var \n");}
+			| NUMBER {printf("term -> NUMBER\n");}
+			| UMINUS NUMBER {printf("term -> UMINUS NUMBER\n");}
 			| L_PAREN exp R_PAREN {printf("term -> L_PAREN expression R_PAREN\n");}
-			| UMINUS L_PAREN exp R_PAREN {printf("term -> L_PAREN expression R_PAREN\n")}
-			| IDENT L_PAREN many_exp R_PAREN {printf("term -> IDENT L_PAREN expressions R_PAREN\n")}
+			| UMINUS L_PAREN exp R_PAREN {printf("term -> L_PAREN expression R_PAREN\n");}
+			| IDENT L_PAREN many_exp R_PAREN {printf("term -> IDENT L_PAREN expressions R_PAREN\n");}
          ;
 
-many_exp: exp {printf("expressions -> expression\n")}
-			| exp COMMA many_exp {printf("expressions -> expression COMMA expressions\n")}
+many_exp: exp {printf("expressions -> expression\n");}
+			| exp COMMA many_exp {printf("expressions -> expression COMMA expressions\n");}
 			;
 
-many_ident: IDENT {printf("identifiers -> ident\n")}
-			 | IDENT COMMA many_ident {printf("identifiers -> ident COMMA identifiers\n")}
+many_ident: IDENT {printf("identifiers -> ident\n");}
+			 | IDENT COMMA many_ident {printf("identifiers -> ident COMMA identifiers\n");}
 			 ;
 
 many_ends:
 			| END many_ends
 			;
 
-many_declaration: many_ends {printf("declarations -> epsilon\n")}
-					 | declaration SEMICOLON many_ends many_declaration many_ends{printf("declarations -> declaration SEMICOLON declarations\n")}
+many_declaration: many_ends {printf("declarations -> epsilon\n");}
+					 | declaration SEMICOLON many_ends many_declaration many_ends{printf("declarations -> declaration SEMICOLON declarations\n");}
 					 ;
 
 function: FUNCTION IDENT SEMICOLON many_ends BEGIN_PARAMS many_ends many_declaration END_PARAMS many_ends BEGIN_LOCALS many_ends many_declaration many_ends END_LOCALS many_ends BEGIN_BODY many_ends many_statements many_ends END_BODY many_ends {printf("function -> FUNCTION IDENT SEMICOLON BEGIN_PARAMS declarations END_PARAMS BEGIN_LOCALS declarations END_LOCALS BEGIN_BODY statements END_BODY\n");}
@@ -116,23 +116,23 @@ var: IDENT { printf("var -> ident\n");}
          | IDENT L_SQUARE_BRACKET exp R_SQUARE_BRACKET {printf("var -> ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET \n ");}
 	      ;
 
-comp: EQ {printf("comp -> EQ\n")}
-		| NEQ {printf("comp -> NEQ\n")}
-		| LT {printf("comp -> LT\n")}
-		| GT {printf("comp -> GT\n")}
-		| LTE {printf("comp -> LTE\n")}
-		| GTE {printf("comp -> GTE\n")}
+comp: EQ {printf("comp -> EQ\n");}
+		| NEQ {printf("comp -> NEQ\n");}
+		| LT {printf("comp -> LT\n");}
+		| GT {printf("comp -> GT\n");}
+		| LTE {printf("comp -> LTE\n");}
+		| GTE {printf("comp -> GTE\n");}
 		;
 
-exp: multexp						{printf("expression -> multiplicative_expression\n")}
-		| multexp PLUS exp		{printf("expression -> multiplicative_expression PLUS multiplicative_expression\n")}
-		| multexp MINUS exp		{printf("expression -> multiplicative_expression MINUS multiplicative_expression\n")}
+exp: multexp						{printf("expression -> multiplicative_expression\n");}
+		| multexp PLUS exp		{printf("expression -> multiplicative_expression PLUS multiplicative_expression\n");}
+		| multexp MINUS exp		{printf("expression -> multiplicative_expression MINUS multiplicative_expression\n");}
 		;
 
-multexp: term						{printf("multiplicative_expression -> term\n")}
-			| term MULT multexp	{printf("mutliplicative_expression -> term MULT term\n")}
-			| term DIV multexp	{printf("multiplicative_expression -> term DIV term\n")}
-			| term MOD multexp	{printf("multiplicative_expression -> term MOD term\n")}
+multexp: term						{printf("multiplicative_expression -> term\n");}
+			| term MULT multexp	{printf("mutliplicative_expression -> term MULT term\n");}
+			| term DIV multexp	{printf("multiplicative_expression -> term DIV term\n");}
+			| term MOD multexp	{printf("multiplicative_expression -> term MOD term\n");}
 			;
 
 %%
