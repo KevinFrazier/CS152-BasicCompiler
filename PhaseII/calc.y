@@ -56,7 +56,7 @@ statement: var ASSIGN exp comment many_ends {printf("statement -> var ASSIGN exp
          ;
 
 many_statements : comment many_ends {printf("statements -> epsilon\n");}
-         | statement SEMICOLON comment many_ends many_statements comment many_ends {printf("statements -> statements\n");}
+         | statement SEMICOLON comment many_ends many_statements comment many_ends {printf("statements -> statement SEMICOLON statements\n");}
 
 many_vars: var {printf("vars -> var\n");}
          | var COMMA many_vars {printf("vars -> var COMMA vars\n");}
@@ -130,8 +130,8 @@ comp: EQ {printf("comp -> EQ\n");}
 		;
 
 exp: multexp						{printf("expression -> multiplicative_expression\n");}
-		| multexp PLUS exp		{printf("expression -> multiplicative_expression PLUS multiplicative_expression\n");}
-		| multexp MINUS exp		{printf("expression -> multiplicative_expression MINUS multiplicative_expression\n");}
+		| multexp PLUS exp		{printf("expression -> multiplicative_expression PLUS expression\n");}
+		| multexp MINUS exp		{printf("expression -> multiplicative_expression MINUS expression\n");}
 		;
 
 multexp: term						{printf("multiplicative_expression -> term\n");}
