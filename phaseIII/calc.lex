@@ -1,5 +1,7 @@
 void incrementOps();
 
+%option noyywrap
+
 %{
   #include <string.h>
 	#include "y.tab.h"
@@ -68,8 +70,8 @@ COMMENT ##.*
 ":="		{currPos += yyleng; return ASSIGN;}
 "="		{currPos += yyleng; return EQUAL;}
 
-{IDENT}+			{/*printf("IDENT %s\n", yytext);*/ yylval.sval = yytext; currPos += yyleng; return IDENT;}
-{DIGIT}+       {/*printf("NUMBER %s\n", yytext);*/ yylval.dval = atoi(yytext); currPos += yyleng; return NUMBER;}
+{IDENT}+			{yylval.sval = strndup(yytext, yyleng); currPos += yyleng; return IDENT;}
+{DIGIT}+       {yylval.ival = atoi(yytext); currPos += yyleng; return NUMBER;}
 {COMMENT}+		{currPos += yyleng; return COMMENT;}
 
 [ \t]+         {/* ignore spaces */ currPos += yyleng;}
