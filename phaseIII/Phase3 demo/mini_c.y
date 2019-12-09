@@ -8,7 +8,7 @@ void yyerror(const char* s);
 %}
 
 %union {
-	int int_val;
+	  int int_val;
     char* str_val;
     Statement* stat;
     StatementList* stat_list;

@@ -3,6 +3,7 @@ void incrementOps();
 %option noyywrap
 
 %{
+  #include "model.hpp"
   #include <string.h>
 	#include "y.tab.h"
   #include <stdio.h>
