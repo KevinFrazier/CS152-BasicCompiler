@@ -39,9 +39,9 @@
 %token BEGIN_LOCALS END_LOCALS BEGIN_BODY END_BODY BEGIN_PARAMS END_PARAMS FUNCTION
 %token DO BEGINLOOP ENDLOOP WHILE IF THEN ENDIF ELSE
 
-%type <expr> bool_expr relation_and_expr relation_expr var term ident multexp exp
+%type <expr> bool_expr relation_and_expr relation_expr var term ident multexp exp many_ident
 
-%% 
+%%
 input:	| input line            
 			;
 
@@ -88,22 +88,22 @@ many_declaration: comment many_ends {}
 
 function: FUNCTION ident SEMICOLON many_ends BEGIN_PARAMS many_ends many_declaration END_PARAMS many_ends BEGIN_LOCALS many_ends many_declaration many_ends END_LOCALS many_ends BEGIN_BODY many_ends many_statements many_ends END_BODY many_ends {}
 
-declaration: many_ident COLON INTEGER {}
+declaration: many_ident COLON INTEGER {$$ = new Expr($1, ":");}
 			  | many_ident COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER {}
 			  ;
 
-bool_expr: relation_and_expr {}
+bool_expr: relation_and_expr {$$ = $1;}
          | relation_and_expr OR relation_and_expr {}
          ;
 
-relation_and_expr: relation_expr {}
+relation_and_expr: relation_expr {$$ = $1;}
          | relation_expr AND relation_and_expr {}
          ;
 
-relation_expr: exp comp exp  {}
-         | L_PAREN bool_expr R_PAREN {}
-         | TRUE {}
-         | FALSE {}
+relation_expr: exp comp exp  {$$ = new Expr($1, $2, $3);}
+         | L_PAREN bool_expr R_PAREN {$$ = $2;}
+         | TRUE {$$ = new ExprID("true");}
+         | FALSE {$$ = new ExprID("false");}
 			| NOT exp comp exp {}
 			| NOT L_PAREN bool_expr R_PAREN {}
 			| NOT TRUE {}
@@ -115,9 +115,9 @@ var: ident {$$ = $1;}
 	      ;
 
 term: var {$$ = $1;}
-			| UMINUS var {$$ = $2;}
+			| '-' var %prec UMINUS {$$ = new Expr(new ExprNumber(0), "-", $2);}
 			| NUMBER { $$ = new ExprNumber($1);}
-			| UMINUS NUMBER {$$ = new ExprNumber($2);}
+			| '-' NUMBER %prec UMINUS {$$ = new Expr(new ExprNumber(0), "-", new ExprNumber($2));}
 			| L_PAREN exp R_PAREN {$$ = $2;}
 			| UMINUS L_PAREN exp R_PAREN {$$ = $3;}
 			| ident L_PAREN many_exp R_PAREN {}
@@ -126,12 +126,12 @@ term: var {$$ = $1;}
 ident: IDENT { $$ = new ExprID($1);}
 	  ;
 
-comp: EQ {$$=$1;}
-		| NEQ {$$=$1;}
-		| LT {$$=$1;}
-		| GT {$$=$1;}
-		| LTE {$$=$1;}
-		| GTE {$$=$1;}
+comp: EQ {$$ = "==";}
+		| NEQ {$$ = "<>";}
+		| LT {$$ = "<";}
+		| GT {$$ = ">";}
+		| LTE {$$ = "<=";}
+		| GTE {$$ = ">=";}
 		;
 
 exp: multexp						{$$ = $1;}
